@@ -8,44 +8,40 @@ import com.example.demo.repositories.DocenteRepository;
 
 @Service
 public class DocenteService {
-
+    
     @Autowired
     private DocenteRepository docenteRepository;
-
+    
     public List<Docente> getAll() {
         return (List<Docente>) docenteRepository.findAll();
     }
-
+    
     public Docente save(Docente docente) {
-        if (isTipoDocumentoAndNumeroDocumentoExists(docente.getTipoDocumento(), docente.getNumeroDocumento())) {
-            throw new IllegalArgumentException(" Ya existe un docente con  este mismo número de documento");
+        if (docenteRepository.existsByNumeroDocumento(docente.getNumeroDocumento())) {
+            throw new IllegalArgumentException("Ya existe un docente con este número de documento");
         }
         return docenteRepository.save(docente);
     }
-
+    
     public Docente update(Docente docente) {
-        if (!docenteRepository.existsById(docente.getId())) {
-            throw new IllegalArgumentException("Docente no existe");
+        var existeDocente = docenteRepository.findById(docente.getId());
+        
+        if (existeDocente.isPresent()) {
+            return docenteRepository.save(docente);
+        } else {
+            return null;
         }
-        if (isTipoDocumentoAndNumeroDocumentoExists(docente.getTipoDocumento(), docente.getNumeroDocumento())) {
-            throw new IllegalArgumentException(" Ya existe un docente con este mismo número de documento");
-        }
-        return docenteRepository.save(docente);
     }
-
+    
     public boolean delete(int id) {
-        if (!docenteRepository.existsById(id)) {
-            throw new IllegalArgumentException("Docente no existe");
-        }
         try {
-            docenteRepository.deleteById(id);
-            return true;
+            if (docenteRepository.existsById(id)) {
+                docenteRepository.deleteById(id);
+                return true;
+            }
+            return false;
         } catch (Exception ex) {
             return false;
         }
-    }
-
-    private boolean isTipoDocumentoAndNumeroDocumentoExists(String tipoDocumento, String numeroDocumento) {
-        return docenteRepository.existsByTipoDocumentoAndNumeroDocumento(tipoDocumento, numeroDocumento);
     }
 }

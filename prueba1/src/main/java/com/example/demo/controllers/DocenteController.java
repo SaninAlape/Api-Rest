@@ -1,21 +1,18 @@
 package com.example.demo.controllers;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.models.Docente;
 import com.example.demo.models.Dto.Response;
 import com.example.demo.services.DocenteService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/docente")
-@Tag(name = "Docentes", description = "Operaciones implementadas con swagger para docentes")
+@Tag(name = "Docentes", description = "Operaciones relacionadas del swagger con docentes")
 public class DocenteController {
 
     @Autowired
@@ -23,7 +20,7 @@ public class DocenteController {
 
     @GetMapping
     @Operation(summary = "Obtener todos los docentes")
-    public ResponseEntity<List<Docente>> getAll() {
+    public ResponseEntity<List<Docente>> getAll() {    
         return ResponseEntity.ok(docenteService.getAll());
     }
 
@@ -40,25 +37,22 @@ public class DocenteController {
     @PutMapping
     @Operation(summary = "Actualizar un docente existente")
     public ResponseEntity<Response> update(@RequestBody Docente docente) {
-        try {
-            var actualizarDocente = docenteService.update(docente);
+        var actualizarDocente = docenteService.update(docente);
+
+        if (actualizarDocente == null) {
+            return ResponseEntity.ok(new Response<>("Docente no existe"));
+        } else {
             return ResponseEntity.ok(new Response<>("Docente Actualizado", actualizarDocente.getId()));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new Response<>(e.getMessage()));
         }
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar un docente por ID")
     public ResponseEntity<Response> delete(@PathVariable("id") int id) {
-        try {
-            if (docenteService.delete(id)) {
-                return ResponseEntity.ok(new Response<>("Docente Eliminado"));
-            } else {
-                return ResponseEntity.badRequest().body(new Response<>("Docente no se eliminó"));
-            }
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new Response<>(e.getMessage()));
+        if (docenteService.delete(id)) {
+            return ResponseEntity.ok(new Response<>("Docente ha sido eliminado"));
+        } else {
+            return ResponseEntity.ok(new Response<>("El docente no pudo ser eliminado porque no existe en el sistema"));
         }
     }
 }

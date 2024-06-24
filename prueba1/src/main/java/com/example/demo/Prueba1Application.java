@@ -12,9 +12,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @ComponentScan({ "com.example.*"})
 @EnableJpaRepositories("com.example.demo.repositories")
+
 public class Prueba1Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Prueba1Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Prueba1Application.class, args);
+	}
+
 }

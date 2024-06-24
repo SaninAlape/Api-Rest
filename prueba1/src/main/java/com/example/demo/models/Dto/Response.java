@@ -13,7 +13,7 @@ public class Response<T> {
         this.data = data;
     }
 
-   
+    // Getters y Setters
 
     public String getMessage() {
         return message;

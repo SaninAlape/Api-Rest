@@ -8,9 +8,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "docente")
+@Table(name="docente")
 public class Docente {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true)
@@ -19,15 +19,13 @@ public class Docente {
     @Column(nullable = false, unique = true)  
     private String numeroDocumento;
 
-    @Column(nullable = false)  
     private String tipoDocumento;
-
     private String nombres;
     private String apellidos;
     private String departamento;
     private String telefono;
     private String email;
-
+    
     
 
     public int getId() {
